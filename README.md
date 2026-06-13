@@ -50,7 +50,7 @@ A production-ready, full-stack CRM platform powered by GPT / Gemini AI, built fo
 │  comm_logs        │          │    failed/opened/read/
 └───────────────────┘          │    clicked/converted
                                └──────────────────────────
-         │ OpenAI / Gemini API
+         │ Gemini API
 ┌────────▼──────────┐
 │    AI Services    │
 │  • NL → SQL       │
@@ -198,8 +198,7 @@ DB_PORT=3306
 DB_USER=root
 DB_PASSWORD=yourpassword
 DB_NAME=ai_crm
-OPENAI_API_KEY=sk-...          # OR use GEMINI_API_KEY
-AI_PROVIDER=openai             # openai | gemini
+AI_PROVIDER=gemini             # openai | gemini
 CHANNEL_SERVICE_URL=http://localhost:6000
 SELF_URL=http://localhost:5000
 FRONTEND_URL=http://localhost:3000
@@ -296,7 +295,7 @@ Services start automatically with MySQL health check.
 ## 🤖 AI Integration
 
 ### Providers
-Set `AI_PROVIDER=openai` or `AI_PROVIDER=gemini` in `.env`.
+Set `AI_PROVIDER=gemini` in `.env`.
 
 ### Features
 
@@ -418,5 +417,3 @@ npm run build
 | Deployment | Vercel (frontend), Railway (backend + channel), PlanetScale (DB) |
 
 ---
-
-Built with ❤️ for hackathons and retail teams.
