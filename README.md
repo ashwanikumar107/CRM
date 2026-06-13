@@ -4,7 +4,7 @@ A production-ready, full-stack CRM platform powered by GPT / Gemini AI, built fo
 
 ---
 
-## ✦ Features at a Glance
+## Features
 
 | Feature | Description |
 |---|---|
