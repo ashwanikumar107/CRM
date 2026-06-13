@@ -1,0 +1,18 @@
+{
+  "name": "ai-crm-monorepo",
+  "version": "1.0.0",
+  "description": "AI-Native Mini CRM — root workspace",
+  "private": true,
+  "scripts": {
+    "install:all":    "cd backend && npm install && cd ../channel-service && npm install && cd ../frontend && npm install",
+    "dev:backend":    "cd backend && npm run dev",
+    "dev:channel":    "cd channel-service && npm run dev",
+    "dev:frontend":   "cd frontend && npm start",
+    "dev":            "concurrently \"npm run dev:backend\" \"npm run dev:channel\" \"npm run dev:frontend\"",
+    "build:frontend": "cd frontend && npm run build",
+    "db:migrate":     "cd backend && node scripts/migrate.js"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

@@ -1,0 +1,77 @@
+version: '3.9'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: ai_crm_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: ai_crm
+      MYSQL_USER: crm_user
+      MYSQL_PASSWORD: crm_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ai_crm_backend
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      PORT: 5000
+      NODE_ENV: production
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: crm_user
+      DB_PASSWORD: crm_password
+      DB_NAME: ai_crm
+      CHANNEL_SERVICE_URL: http://channel-service:6000
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      AI_PROVIDER: ${AI_PROVIDER:-openai}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
+      SELF_URL: http://backend:5000
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./backend/logs:/app/logs
+
+  channel-service:
+    build:
+      context: ./channel-service
+      dockerfile: Dockerfile
+    container_name: ai_crm_channel
+    restart: unless-stopped
+    environment:
+      PORT: 6000
+    ports:
+      - "6000:6000"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_API_URL: http://localhost:5000/api
+    container_name: ai_crm_frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  mysql_data:
