@@ -119,7 +119,7 @@ export default function Login() {
           {/* Demo hint */}
           <div className="mt-5 p-3 bg-brand-500/5 border border-brand-500/20 rounded-xl">
             <p className="text-xs text-brand-300 font-medium mb-1">Demo credentials</p>
-            <p className="text-xs text-muted font-mono">admin@crmhq.com · Admin@123</p>
+            <p className="text-xs text-muted font-mono">ashwani107kumar@gmail.com · Admin@123</p>
           </div>
         </div>
 
