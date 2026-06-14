@@ -1,6 +1,6 @@
 # 🤖 CRM — AI-Native Mini CRM for Retail Brands
 
-A production-ready, full-stack CRM platform powered by GPT / Gemini AI, built for retail brands to intelligently engage shoppers through segmented, personalized campaigns.
+A production-ready, full-stack CRM platform, built for retail brands to intelligently engage shoppers through segmented, personalized campaigns.
 
 ---
 
