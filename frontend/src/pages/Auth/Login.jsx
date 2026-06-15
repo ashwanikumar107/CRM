@@ -3,8 +3,8 @@ import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
 export default function Login() {
-  const [email,    setEmail]    = useState('admin@crmhq.com');
-  const [password, setPassword] = useState('Admin@123');
+  const [email,    setEmail]    = useState('');
+  const [password, setPassword] = useState('');
   const [loading,  setLoading]  = useState(false);
   const [error,    setError]    = useState('');
   const [showPass, setShowPass] = useState(false);
@@ -71,7 +71,7 @@ export default function Login() {
                 onChange={e => setEmail(e.target.value)}
                 required
                 autoFocus
-                placeholder="you@company.com"
+                placeholder="E-mail"
                 className="w-full bg-surface border border-border rounded-xl px-4 py-3 text-sm text-white
                   placeholder-muted focus:outline-none focus:border-brand-500 focus:ring-2
                   focus:ring-brand-500/20 transition-all"
@@ -87,7 +87,7 @@ export default function Login() {
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   required
-                  placeholder="••••••••"
+                  placeholder="Password"
                   className="w-full bg-surface border border-border rounded-xl px-4 py-3 pr-11 text-sm text-white
                     placeholder-muted focus:outline-none focus:border-brand-500 focus:ring-2
                     focus:ring-brand-500/20 transition-all"
@@ -115,12 +115,6 @@ export default function Login() {
               ) : 'Sign in →'}
             </button>
           </form>
-
-          {/* Demo hint */}
-          <div className="mt-5 p-3 bg-brand-500/5 border border-brand-500/20 rounded-xl">
-            <p className="text-xs text-brand-300 font-medium mb-1">Demo credentials</p>
-            <p className="text-xs text-muted font-mono">ashwani107kumar@gmail.com · Admin@123</p>
-          </div>
         </div>
 
         <p className="text-center text-xs text-muted mt-6">

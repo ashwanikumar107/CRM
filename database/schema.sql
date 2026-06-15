@@ -1,7 +1,3 @@
--- ============================================================
--- AI-Native Mini CRM - Complete MySQL Schema
--- ============================================================
-
 CREATE DATABASE IF NOT EXISTS ai_crm;
 USE ai_crm;
 
