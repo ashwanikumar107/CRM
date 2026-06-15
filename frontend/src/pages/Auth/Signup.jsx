@@ -79,7 +79,7 @@ export default function Signup() {
                 onChange={e => setName(e.target.value)}
                 required
                 autoFocus
-                placeholder="Jane Doe"
+                placeholder="Enter you name"
                 className="w-full bg-surface border border-border rounded-xl px-4 py-3 text-sm text-white
                   placeholder-muted focus:outline-none focus:border-brand-500 focus:ring-2
                   focus:ring-brand-500/20 transition-all"
@@ -94,7 +94,7 @@ export default function Signup() {
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 required
-                placeholder="you@company.com"
+                placeholder="E-mail"
                 className="w-full bg-surface border border-border rounded-xl px-4 py-3 text-sm text-white
                   placeholder-muted focus:outline-none focus:border-brand-500 focus:ring-2
                   focus:ring-brand-500/20 transition-all"
@@ -152,15 +152,7 @@ export default function Signup() {
                 </>
               ) : 'Create account →'}
             </button>
-          </form>
-
-          {/* Role hint */}
-          <div className="mt-5 p-3 bg-brand-500/5 border border-brand-500/20 rounded-xl">
-            <p className="text-xs text-brand-300 font-medium mb-1">👀 Viewer access</p>
-            <p className="text-xs text-muted">
-              New accounts start with read-only access. Ask an admin to upgrade your role from Settings.
-            </p>
-          </div>
+          </form>          
         </div>
 
         <p className="text-center text-xs text-muted mt-6">
