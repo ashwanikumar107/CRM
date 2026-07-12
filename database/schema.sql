@@ -23,7 +23,7 @@ CREATE TABLE users (
 -- Default admin  (password: Admin@123)
 -- bcrypt hash of "Admin@123" with saltRounds=10
 INSERT INTO users (user_id, name, email, password_hash, role) VALUES
-('u001','Ashwani Kumar','Ashu@gmail.com',
+('u001','Admin User','admin@demo.com',
  '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWq',
  'admin');
 
