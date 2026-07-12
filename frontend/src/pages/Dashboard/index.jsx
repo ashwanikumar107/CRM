@@ -12,6 +12,32 @@ const COLORS = ['#3b5bfe','#8b5cf6','#10b981','#f59e0b','#ef4444','#06b6d4'];
 const fmt = n => n == null ? '—' : Number(n).toLocaleString('en-IN');
 const fmtRs = n => n == null ? '—' : '₹' + Number(n).toLocaleString('en-IN');
 
+// Custom legend for the pie chart
+const renderCustomLegend = (cats) => (
+  <div style={{ display:'flex', flexWrap:'wrap', gap:'8px', marginTop:'12px', justifyContent:'center' }}>
+    {cats.map((c, i) => (
+      <div key={i} style={{ display:'flex', alignItems:'center', gap:'5px' }}>
+        <div style={{ width:10, height:10, borderRadius:'50%', background: COLORS[i % COLORS.length], flexShrink:0 }} />
+        <span style={{ fontSize:11, color:'#8892b0' }}>{c.category}</span>
+      </div>
+    ))}
+  </div>
+);
+
+// Custom label for pie slices (only show if slice is large enough)
+const renderCustomLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }) => {
+  if (percent < 0.08) return null;
+  const RADIAN = Math.PI / 180;
+  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+  const x = cx + radius * Math.cos(-midAngle * RADIAN);
+  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+  return (
+    <text x={x} y={y} fill="white" textAnchor="middle" dominantBaseline="central" fontSize={11} fontWeight={600}>
+      {`${(percent * 100).toFixed(0)}%`}
+    </text>
+  );
+};
+
 export default function Dashboard() {
   const [custStats, setCustStats]   = useState(null);
   const [orderData, setOrderData]   = useState(null);
@@ -75,41 +101,65 @@ export default function Dashboard() {
         {/* Revenue Trend */}
         <div className="lg:col-span-2 bg-card border border-border rounded-2xl p-5">
           <h3 className="font-semibold text-white mb-4">Revenue Trend</h3>
-          <ResponsiveContainer width="100%" height={220}>
-            <AreaChart data={monthly}>
+          <ResponsiveContainer width="100%" height={260}>
+            <AreaChart data={monthly} margin={{ top: 5, right: 10, left: 10, bottom: 20 }}>
               <defs>
                 <linearGradient id="rev" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%"  stopColor="#3b5bfe" stopOpacity={0.3} />
+                  <stop offset="5%"  stopColor="#3b5bfe" stopOpacity={0.35} />
                   <stop offset="95%" stopColor="#3b5bfe" stopOpacity={0} />
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="#252840" />
-              <XAxis dataKey="month" tick={{ fill:'#8892b0', fontSize:11 }} />
-              <YAxis tick={{ fill:'#8892b0', fontSize:11 }} />
+              <XAxis dataKey="month" tick={{ fill:'#8892b0', fontSize:11 }} angle={-30} textAnchor="end" height={45} />
+              <YAxis tick={{ fill:'#8892b0', fontSize:11 }} width={60}
+                tickFormatter={v => '₹' + (v >= 1000 ? (v/1000).toFixed(0)+'k' : v)} />
               <Tooltip
                 contentStyle={{ background:'#1a1d2e', border:'1px solid #252840', borderRadius:8, color:'white' }}
                 formatter={v => ['₹' + Number(v).toLocaleString('en-IN'), 'Revenue']}
               />
-              <Area type="monotone" dataKey="revenue" stroke="#3b5bfe" fill="url(#rev)" strokeWidth={2} />
+              <Area type="monotone" dataKey="revenue" stroke="#3b5bfe" fill="url(#rev)" strokeWidth={2.5} dot={{ fill:'#3b5bfe', r:3 }} />
             </AreaChart>
           </ResponsiveContainer>
         </div>
 
         {/* Category breakdown */}
-        <div className="bg-card border border-border rounded-2xl p-5">
-          <h3 className="font-semibold text-white mb-4">By Category</h3>
-          <ResponsiveContainer width="100%" height={220}>
-            <PieChart>
-              <Pie data={cats} dataKey="revenue" nameKey="category" cx="50%" cy="50%"
-                outerRadius={80} label={({ category }) => category}>
-                {cats.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
-              </Pie>
-              <Tooltip
-                contentStyle={{ background:'#1a1d2e', border:'1px solid #252840', borderRadius:8, color:'white' }}
-                formatter={v => ['₹' + Number(v).toLocaleString('en-IN')]}
-              />
-            </PieChart>
-          </ResponsiveContainer>
+        <div className="bg-card border border-border rounded-2xl p-5 flex flex-col">
+          <h3 className="font-semibold text-white mb-2">By Category</h3>
+          {cats.length === 0 ? (
+            <div className="flex-1 flex flex-col items-center justify-center text-center py-8">
+              <div style={{ fontSize:40, marginBottom:8 }}>🗂️</div>
+              <p className="text-muted text-sm">No category data yet</p>
+              <p className="text-muted text-xs mt-1">Add orders to see breakdown</p>
+            </div>
+          ) : (
+            <>
+              <ResponsiveContainer width="100%" height={200}>
+                <PieChart>
+                  <Pie
+                    data={cats}
+                    dataKey="revenue"
+                    nameKey="category"
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={50}
+                    outerRadius={85}
+                    paddingAngle={3}
+                    labelLine={false}
+                    label={renderCustomLabel}
+                  >
+                    {cats.map((_, i) => (
+                      <Cell key={i} fill={COLORS[i % COLORS.length]} stroke="transparent" />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    contentStyle={{ background:'#1a1d2e', border:'1px solid #252840', borderRadius:8, color:'white' }}
+                    formatter={v => ['₹' + Number(v).toLocaleString('en-IN'), 'Revenue']}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+              {renderCustomLegend(cats)}
+            </>
+          )}
         </div>
       </div>
 
@@ -118,19 +168,23 @@ export default function Dashboard() {
         {/* Campaign performance */}
         <div className="bg-card border border-border rounded-2xl p-5">
           <h3 className="font-semibold text-white mb-4">Campaign Funnel</h3>
-          <ResponsiveContainer width="100%" height={200}>
+          <ResponsiveContainer width="100%" height={220}>
             <BarChart data={[
               { name: 'Sent',      v: overall.total_sent      || 0 },
               { name: 'Delivered', v: overall.total_delivered || 0 },
               { name: 'Opened',    v: overall.total_opened    || 0 },
               { name: 'Clicked',   v: overall.total_clicked   || 0 },
               { name: 'Converted', v: overall.total_converted || 0 },
-            ]}>
+            ]} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#252840" />
               <XAxis dataKey="name" tick={{ fill:'#8892b0', fontSize:11 }} />
               <YAxis tick={{ fill:'#8892b0', fontSize:11 }} />
               <Tooltip contentStyle={{ background:'#1a1d2e', border:'1px solid #252840', borderRadius:8, color:'white' }} />
-              <Bar dataKey="v" fill="#3b5bfe" radius={[4,4,0,0]} />
+              <Bar dataKey="v" radius={[4,4,0,0]}>
+                {['#3b5bfe','#8b5cf6','#10b981','#f59e0b','#ef4444'].map((color, i) => (
+                  <Cell key={i} fill={color} />
+                ))}
+              </Bar>
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -142,7 +196,7 @@ export default function Dashboard() {
             {cities.slice(0,6).map((c,i) => (
               <div key={i} className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full" style={{ background: COLORS[i] }} />
+                  <div className="w-2 h-2 rounded-full" style={{ background: COLORS[i % COLORS.length] }} />
                   <span className="text-sm text-white">{c.city}</span>
                 </div>
                 <div className="flex items-center gap-4">
