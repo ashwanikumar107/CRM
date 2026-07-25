@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS ai_crm;
-USE ai_crm;
+-- Aiven: database is pre-created as 'defaultdb', no CREATE DATABASE needed
+
 
 -- ============================================================
 -- USERS  (authentication)
@@ -24,7 +24,7 @@ CREATE TABLE users (
 -- bcrypt hash of "Admin@123" with saltRounds=10
 INSERT INTO users (user_id, name, email, password_hash, role) VALUES
 ('u001','Admin User','admin@demo.com',
- '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWq',
+ '$2a$10$FiM1Xho7eGnEtLCXmdr5Zujjps7c4gj9an8geXUIcDuB9Jon0KieO',
  'admin');
 
 -- ============================================================
@@ -63,6 +63,7 @@ CREATE TABLE customers (
   INDEX idx_total_spent (total_spent),
   INDEX idx_last_order_at (last_order_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 
 -- ============================================================
 -- ORDERS

@@ -81,12 +81,19 @@ export function AuthProvider({ children }) {
       res => res,
       async err => {
         const original = err.config;
-        if (err.response?.status === 401 && !original._retry) {
+
+        // Never retry auth endpoints — avoids infinite refresh loop
+        const isAuthUrl = original?.url?.includes('/auth/');
+        if (err.response?.status === 401 && !original._retry && !isAuthUrl) {
           original._retry = true;
           const newAt = await doRefresh();
           if (newAt) {
             original.headers.Authorization = `Bearer ${newAt}`;
             return axios(original);
+          } else {
+            // Refresh failed — tokens are bad, force re-login
+            clearTokens();
+            window.location.href = '/login';
           }
         }
         return Promise.reject(err);
