@@ -14,9 +14,16 @@ channel-service/node_modules/
 .env.local
 .env.development
 .env.production
+.env.staging
 backend/.env
 frontend/.env
 channel-service/.env
+
+# Allow example/template env files (no real secrets)
+!.env.example
+!backend/.env.example
+!frontend/.env.example
+!channel-service/.env.example
 
 # ============================================
 # Build outputs
@@ -49,9 +56,14 @@ Thumbs.db
 *.swp
 
 # ============================================
+# Docker overrides (may contain secrets)
+# ============================================
+docker-compose.override.yml
+
+# ============================================
 # Misc
 # ============================================
 coverage/
 .npm/
 .eslintcache
-*.tsbuildinfo
+*.tsbuildinfo

@@ -392,7 +392,6 @@ npm run build
 
 | Enhancement | Priority |
 |---|---|
-| JWT Auth + Role-based access | High |
 | Real WhatsApp Business API / Twilio integration | High |
 | Scheduled campaigns (cron) | Medium |
 | A/B testing for messages | Medium |
